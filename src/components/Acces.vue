@@ -1,40 +1,98 @@
 <template>
   <div class="Acces">
+    <img alt="Vue logo" src="../assets/mooz.png" height="200" width="200">
+    <title>Access</title>
     <div id="login">
         <div class="container">
             <div id="login-row" class="row justify-content-center align-items-center">
                 <div id="login-column" class="col-md-6">
                     <div id="login-box" class="col-md-12">
+                        <h3 class="text-center text-info" :key="param"> {{ param }} </h3>
                         <form id="login-form" class="form" action="" method="post">
                             <h3 class="text-center text-info">Login</h3>
                             <div class="form-group">
-                                <label for="username" class="text-info">Username:</label><br>
-                                <input type="text" name="username" id="username" class="form-control">
+                                <label for="username" class="text-info" >Username:</label><br>
+                                <input type="text" name="username" id="username" class="form-control" v-model="username">
                             </div>
                             <div class="form-group">
                                 <label for="email" class="text-info">Email:</label><br>
-                                <input type="text" name="email" id="email" class="form-control">
+                                <input type="text" name="email" id="email" class="form-control" v-model="email">
                             </div>
                             <div class="form-group">
-                                <label for="remember-me" class="text-info"><span>Remember me</span>
+                                <label for="remember-me" class="text-info"><span>Remember me </span>
                                 <span><input id="remember-me" name="remember-me" type="checkbox"></span></label><br>
-                                <input type="button" class="btn btn-info btn-md" value="submit">
+                                <input type="button" class="btn btn-info btn-md" v-on:click="Login" value="submit">
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
+            <br>
         </div>
     </div>
   </div>
 </template>
 
 <script>
+import { required, minLength, between } from 'vuelidate/lib/validators'
+
 export default {
   name: 'Acces',
-  props: {
-    msg: String
-  }
+  props:
+  {
+      param: String,
+  },
+  data () {
+      return {
+        username: '',
+        email: '',
+        isError: false,
+        errorMsg: []
+      }
+  },
+  validation:
+  {
+      username:
+      {
+          required
+      },
+      email:
+      {
+          required
+      }
+  },
+  methods:
+  {
+    Login: function(event)
+    {
+        
+        if (this.username != '' && this.email != '')
+        {
+            if (this.param != null)
+            {
+                this.isError = false;
+                var json = JSON.parse(atob(this.param));
+                if (json)
+                {
+                    window.alert(JSON.stringify(json));
+                }
+            }
+            else
+            {
+                this.errorMsg.push("Unauthorized");
+                this.isError = true;
+            }
+        }
+        else
+        {
+            if (this.username == '')
+                this.errorMsg.push("Name required");
+            if (this.email == '')
+                this.errorMsg.push("Mail required");
+            this.isError = true;
+        }
+    }
+  },
 }
 </script>
 
